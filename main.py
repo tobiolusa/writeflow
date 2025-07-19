@@ -32,7 +32,7 @@ async def update_blog(blog_id:int):
     if not blog_obj:
         raise HTTPException(status_code=404, detail="Not found")
     
-    blog_data = blog.dict(exclude_unset=True)
+    blog_data = Blog.dict(exclude_unset=True)
     for field, value in blog_data.items():
         setattr(blog_obj, field, value)
 
@@ -48,3 +48,14 @@ async def delete_blog(blog_id:int):
     await blog.delete()
     return {"message" : "Blog deleted successfully"}
 
+
+
+#Register ORM
+
+register_tortoise(
+    app,
+    db_url = 'sqlite://blog.db',
+    modules = {'models' : ['models']},
+    generate_schemas=True,
+    add_exception_handlers=True
+)
